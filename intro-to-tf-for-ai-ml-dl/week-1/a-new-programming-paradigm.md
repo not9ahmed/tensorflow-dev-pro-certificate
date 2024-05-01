@@ -84,5 +84,6 @@ print(model.predict([10.0]))
 ```
 
 
+**Convergence**
 
-
+The process of getting very close to the correct answer
