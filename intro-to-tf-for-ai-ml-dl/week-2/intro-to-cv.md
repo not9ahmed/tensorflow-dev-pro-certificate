@@ -41,3 +41,55 @@ model = keras.Sequential([
     keras.layers.Dense(10, activation=tf.nn.softmax)
 ])
 ```
+
+
+## Using Callbacks to Control Training
+
+Callbacks are a way to stop training when I reach certain amount in terms of loss an accuracy.
+
+On every epoch call back to code function check metrics then if satisfied, then stop the training.
+
+The below is example code of call back function
+
+```python
+# instantiate the class for callback
+callbacks = myCallback()
+
+mnist = tf.keras.datasets.fashion_mnist
+
+# loading up the dataset
+(training_images, training_labels), (test_images, test_labels) = mnist.load_data()
+
+# normalizing the dataset
+training_images = training_images/255.0
+test_images = test_images/255.0
+
+
+# defining the model
+model = tf.keras.models.Sequential([
+    tf.keras.layers.Flatten(),
+    tf.keras.layer.Dense(512, activation=tf.nn.relu),
+    tf.keras.layer.Dense(10, activation=tf.nn.softmax)
+])
+
+# compiling the model
+model.compile(optimizer='adam', loss='sparse_categorical_crossentropy')
+
+
+# here I'm passing the callbacks into the model training
+model.fit(training_images, training_labels, epochs=5, callbacks = [callbacks])
+```
+
+The callback function in class is the below
+```python
+class myCallback(tf.keras.callbacks.Callback):
+
+    # it is called by the callback whenever the epoch ends
+    # logs objects which contains info of current training
+    # logs.get('loss') is part of the logs
+    def on_epoch_end(self, epoch, logs={}):
+        if (logs.get('loss') < 0.4):
+            print("\nLoss is low so canceling training!")
+            self.model.stop_training = True
+
+```
