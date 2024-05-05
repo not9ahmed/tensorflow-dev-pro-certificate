@@ -142,3 +142,5 @@ It will have be the result of transformering 3D arrays/tensors into linear/ 1D a
 Output Shape = 5 * 5 * 64 = 1600
 
 
+## Improving the Fashion Classifier with Convolutions
+
