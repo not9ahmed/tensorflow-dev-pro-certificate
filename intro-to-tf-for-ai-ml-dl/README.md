@@ -3,7 +3,8 @@
 
 ## Topics to Learn
 
-- ADD MORE
+- Read TensorFlow Documentation for Methods Uses
+- ImageGenerator API
 - NumPy reshape
 - Batches in Training and Validation
 - Go through  https://developers.google.com/machine-learning/crash-course/descending-into-ml/video-lecture
