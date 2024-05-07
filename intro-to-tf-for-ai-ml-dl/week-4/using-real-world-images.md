@@ -83,3 +83,134 @@ validation_generator = test_datagen.flow_from_directory(
 
 ## Defining ConvNet to Use Complex Images
 
+Convolutional Neural Networks to classify horses vs human
+
+The following model has 3 Sets of Convolutional + Pooling Layers, Because of higher complexity of images
+
+```python
+model = tf.keras.models.Model([
+
+
+
+    # 1 convolutional layer with 16 filters
+    # each filter of size (3X3)
+    # relu activation
+    # input shape (300, 300, 3) => (width, height, colors)
+    tf.keras.layers.Conv2D(16, (3,3), activation='relu', input_shape=(300, 300, 3)),
+
+    # 1 max pooling with (2,2)
+    tf.keras.layers.MaxPooling2D(2,2)
+
+
+    # 2 convolutional layer with 32 filters
+    # each filter of size (3X3)
+    # relu activation
+    # input shape (300, 300, 3) => (width, height, colors)
+    tf.keras.layers.Conv2D(32, (3,3), activation='relu', input_shape=(300, 300, 3)),
+
+    # 2 max pooling with (2,2)
+    tf.keras.layers.MaxPooling2D(2,2)
+
+
+
+    # 2 convolutional layer with 64 filters
+    # each filter of size (3X3)
+    # relu activation
+    # input shape (300, 300, 3) => (width, height, colors)
+    tf.keras.layers.Conv2D(64, (3,3), activation='relu', input_shape=(300, 300, 3)),
+
+    # 2 max pooling with (2,2)
+    tf.keras.layers.MaxPooling2D(2,2)
+
+
+    tf.keras.layers.Flatten(),
+    tf.keras.layers.Dense(512, activation='relu'),
+
+    # output layer change
+    # 1 unit and sigmoid activation because it's binary
+    tf.keras.layers.Dense(1, activation='sigmoid'),
+
+])
+
+```
+
+## Training the ConvNet
+
+For compiling the model an defining the loss, optimizer and metrics
+
+```python
+from tensorflow.keras.optimizers import RMSprop
+
+model.compile(
+            # it is binary classification problem
+            loss='binary_crossentropy',
+
+            # RMSprop is type of gradient descent instead of adam
+            # lr is the learning rate
+            optimizer=RMSprop(lr=0.001),
+            metrics=['accuracy']
+            )
+```
+
+For training the model the below code used:
+
+```python
+history = model.fit(
+
+    # streams images from the training directory
+    # 1024 images from training
+    train_generator,
+
+    # batch size was 128 from train_generator
+    # so they will be loaded 8 times
+    # 128 * 8 => 1024 images (total)
+    step_per_epoch=8,
+
+    # going through the dataset
+    epochs=15,
+
+    # data from validation_generator which loads images
+    # from the validation dataset
+    # 256 images total
+    validation_data=validation_generator,
+
+    # 256 images and want to be handled in batches of 32
+    # 32 * 8 = 256 images (total)
+    validation_steps=8,
+
+    # how much to display while training
+    # hide training epoch progress
+    verbose=2
+)
+```
+
+
+Following code can be found below which is Google colab code to upload image, then making prediction for the uploaded image
+
+```python
+import numpy as np
+from google.colab import files
+from tensorflow.keras.utils import load_img, img_to_array
+
+uploaded = files.upload()
+
+for fn in uploaded.keys():
+ 
+  # predicting images
+  path = '/content/' + fn
+  img = load_img(path, target_size=(300, 300))
+  x = img_to_array(img)
+  x /= 255
+  x = np.expand_dims(x, axis=0)
+
+  images = np.vstack([x])
+  classes = model.predict(images, batch_size=10)
+  print(classes[0])
+    
+  if classes[0]>0.5:
+    print(fn + " is a human")
+  else:
+    print(fn + " is a horse")
+```
+
+
