@@ -58,3 +58,127 @@ for layer in pre_trained_model.layers:
 
 pre_trained_model.summary()
 ```
+
+### All Layers, and it can be used to retrieve it
+
+```python
+# will fetch the output of a lot of convolutions
+# of size 7X7
+last_layer = pre_trained_model.get_layer('mixed7')
+
+last_output = last_layer.output
+```
+
+### Defining new model which will take Inception last layer
+
+The following model uses functional api instead of Sequential
+
+```python
+from tensorflow.keras.optimizers import RMSprop
+
+# passing the inception mixed7 layer to flatten
+x = layers.Flatten()(last_output)
+
+x = layers.Dense(1024, activation='relu')(x)
+
+# output layer
+x = layser.Dense(1, activation='sigmoid')(x)
+
+# defining the model
+# will take the inception input layer
+# then add layers definitions just created
+model  = Model(pre_trained_model.input, x)
+
+model.compile(
+    optimizer=RMSprop(lr=0.0001),
+    loss='binary_crossentropy',
+    metrics=['acc']
+)
+
+# Add Data augmentation parameters to ImageDataGenerator
+train_datagen = ImageDataGenerator(
+    rescale = 1./255.,
+    rotation_range = 40,
+    width_shift_range = 0.2,
+    height_shift_range = 0.2,
+    shear_range = 0.2,
+    zoom_range = 0.2,
+    horizontal_flip = True
+)
+
+
+# Getting the images form directory
+train_generator = train_datagen.flow_from_directory(
+    train_dir,
+    batch_size = 20,
+    class_mode = 'binary',
+    target_size = (150, 150)
+)
+```
+
+### Training/Fitting the model
+
+```python
+history = model.fit(
+    train_generator,
+    validation_data = validation_generator,
+    steps_per_epoch = 100,
+    epochs = 100,
+    validation_steps = 50,
+    verbose = 2
+)
+
+```
+
+## Dropout
+
+Layers in neural networks can sometimes have similar weights and can impact each other which is leading to overfitting.
+
+Neighbors not affecting each other to much, which results in removing overfitting.
+
+**Intiuition:**
+Can't rely on any one feature, so have to spread out weights across units.
+
+Dropout is very important in CNN, as it can help the model in overcoming overfitting. Because there is not enough data.
+
+Use probability for each layer, in which
+
+**Downside:**  
+- The cost function $J$ is not well defined, on every iteration a couple of nodes are killed.
+- Added extra hyperparameter
+
+So it's better to avoid it before, just to calculate the cost function $J$, then make sure it's decreasing over iterations.
+
+Then turn dropout on, in order to overcome the overfitt problem.
+
+
+### Dropout in Code
+
+```python
+from tensorflow.keras.optimizers import RMSprop
+
+# passing the output of Inception model
+x = layers.Flatten()(last_output)
+
+# hidden layer with 1024 units
+x = layers.Dense(1024, activation='relu')(x)
+
+# added dropout layer
+# between 0 and 1 fraction of units to drop
+# which is 20% of units will be dropped
+x = layers.Dropout(0.2)(x)
+
+# output layer
+x = layers.Dense(1, activation='sigmoid')(x)
+
+# function api
+model = Model(pre_trained_model.input, x)
+
+# compiling the model
+model.compile(
+    optimizer = RMSprop(lr = 0.0001),
+    loss = 'binary_crossentropy',
+    metrics = ['acc']
+)
+
+```
