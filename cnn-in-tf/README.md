@@ -8,3 +8,4 @@
 - Go through notenooks again
 - Dropout and Regularization in CNN
 - Try training the modle with different CNN architectures
+- Add datasets to sub directories and run notebooks locally
