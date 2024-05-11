@@ -7,3 +7,4 @@
 - Read about augmentation options in ImageDataGenerator
 - Go through notenooks again
 - Dropout and Regularization in CNN
+- Try training the modle with different CNN architectures
