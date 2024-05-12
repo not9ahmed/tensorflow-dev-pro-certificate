@@ -210,7 +210,7 @@ padded = pad_sequences(
 
 ## Sarcasm Detection
 
-The following section will implement sarcasm detection
+The following section will implement sarcasm detection, by first loading the json file
 
 ```python
 import json
@@ -218,13 +218,43 @@ import json
 with open ("sarcasm.json", 'r') as f:
     datastore = json.load(f)
 
-
+# extract data from the json file
 sentences = []
 labels = []
 urls = []
 
+# iterate over list then copy headline, is_sarcastic, article_link into the lists
 for item in datastore:
     sentences.append(item['headline'])
     labels.append(item['is_sarcastic'])
     urls.append(item['article_link'])
+```
+
+Tokenizing the sarcasm dataset
+
+```python
+from tensorflow.keras.preprocessing.text import Tokenizer
+from tensorflow.keras.preprocessing.sequence import pad_sequences
+
+# creating instance of tokenizer
+# and labeling not found oov_token with <OOV>
+tokenizer = Tokenizer(oov_token="<OOV>")
+
+# encode the text into numeric values
+# generate word index
+# and initalize tokenizer
+tokenizer.fit_on_texts(sentences)
+
+# creates dictionary of words and their tokens
+word_index = tokenizer.word_index
+
+# conver the sentences into sequence representation
+sequences = tokenizer.texts_to_sequences(sentences)
+
+# padding the sequences
+padded = pad_sequences(sequences, padding='post')
+
+# getting the first row from the dataset
+print(padded[0])
+print(padded.shape)
 ```
