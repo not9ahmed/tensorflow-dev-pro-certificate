@@ -394,3 +394,10 @@ training_size = 20000
 Before we used TensorFlow Datasets, we loaded raw text and tokenize them ourselves. But there are version where the IMDB dataset that was pre-tokenized but the tokenization happened on subwords. To demonstrate how text classifcation have unique issues which is the sequence of words can be as important as their existence.
 
 
+## Quiz
+
+What is the purpose of the embedding dimension?
+- It is the number of dimensions for the vector representing the word encoding
+
+When tokenizing a corpus, what does the num_words=n parameter do?
+- It specifies the maximum number of words to be tokenized, and picks the most common ‘n-1’ words

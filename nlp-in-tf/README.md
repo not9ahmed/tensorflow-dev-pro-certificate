@@ -11,4 +11,7 @@
 - Learn how embedding work
 - In NLP different Flatten layer used which is Global Average Pooling 1D
 - Read about Embedding Layer https://www.tensorflow.org/text/guide/word_embeddings
-- 
+- Understand embedding dimension
+- Read about tokenizer parameters num_words=n
+- Read more about subword tokenization
+- RNN, GIU, LSTM
