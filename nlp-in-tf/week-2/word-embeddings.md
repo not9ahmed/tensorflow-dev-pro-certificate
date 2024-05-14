@@ -175,7 +175,7 @@ model.fit(
 
 ### Demonstrating the Embeddings
 
-The following code will d
+The following code will display the embedding of sentnece
 ```python
 
 e = model.layers[0]
@@ -372,3 +372,25 @@ def plot_graphs(history, string):
 plot_graphs(history, "acc")
 plot_graphs(history, "loss")
 ```
+
+## Loss
+
+Loss can be considered as the confidence in the prediction, so while the accuracy increases but the confidence per prediction decreases.
+
+Important to look at it by noticiing differences while changing the hyperparameters.
+
+```python
+vocab_size = 1000       # (was 10,000)
+embedding_dim = 32      # (was 16)
+max_length = 16         # (was 32)
+trunc_type = 'post'
+padding_type = 'post'
+oov_tok = "<OOV>"
+training_size = 20000
+```
+
+## Pre-tokenized datasets
+
+Before we used TensorFlow Datasets, we loaded raw text and tokenize them ourselves. But there are version where the IMDB dataset that was pre-tokenized but the tokenization happened on subwords. To demonstrate how text classifcation have unique issues which is the sequence of words can be as important as their existence.
+
+
