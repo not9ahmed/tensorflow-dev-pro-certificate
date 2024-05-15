@@ -14,4 +14,6 @@
 - Understand embedding dimension
 - Read about tokenizer parameters num_words=n
 - Read more about subword tokenization
-- RNN, GIU, LSTM
+- Read about RNN, GIU, LSTM
+- Check Sequence Models course by Andrew https://www.coursera.org/lecture/nlp-sequence-models/deep-rnns-ehs0S
+- 

@@ -4,6 +4,21 @@ This week will cover Embeddings, where token are mapped as vectors in a high dim
 
 This will start the process of training a neural network to learn sentiment in text. The focus will be on movie reviews labeled "positive" and "negative", and determine the words that drive the meaning in sentence.
 
+Word embeddings are the weights for the input words on connections from input layer to activations functions!
+
+So the activation neuron will have the following
+$$
+f(x) = word_{1} * \text{embedding}_{1} +
+word_{2} * \text{embedding}_{2} + ...
++ b
+$$
+
+The embedding dimension will be the total number of words in input layer.
+
+$$
+\text{words embedding} = [w_{1} \ w_{2} \ w_{3} \  w_{4} \ ... \ w_{n}]
+$$
+
 ## Introduction
 
 Instead of representing the words as number from 1 to 10,000, we will have a better way to represent words.
