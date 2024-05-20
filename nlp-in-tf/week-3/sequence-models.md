@@ -132,3 +132,81 @@ Loss is also similar with 2 layers having smoother curve, and the loss is increa
 
 
 RNNs and LSTM inherent sequence are great for predicting unseen text for generating text.
+
+
+### LSTM vs Non LSTM
+
+```python
+model = tf.keras.Sequential([
+
+    # vocab_size is the number of unique words => considered as units/neurons count
+    # embedding_dim is like the filter size in cnn
+    # input_length is the max length of a single sequence of text
+    tf.keras.layers.Embedding(
+        vocab_size,
+        embedding_dim,
+        input_length= max_length
+        ),
+    
+    # will be replaced with the below
+    # tf.keras.layers.GlobalAveragePooling1D(),
+    
+    # defining LSTM
+    tf.keras.layers.Bidirectional(tf.keras.layers.LSTM(32)),
+    
+
+
+    tf.keras.layers.Dense(24, activation='relu'),
+    tf.keras.layers.Dense(1, activation='sigmoid'),
+])
+```
+
+
+### Without LSTM vs Withb LSTM - Accuracy
+
+The following image shows the difference between a model without LSTM layer vs LSTM layer model. It can be observed that without LSTM is reaching an accuracy of 0.85 and val_acc of 0.80.
+
+Meanwhile, with LSTM is performing better and it keeps on climbing to 0.975, but the val_acc is decreasing which it indicates that the model is suffering from overfitting. This problem can be resolved with some tweaking.
+
+![image of non lstm vs lstm accuracy](images/non-lstm-vs-lstm-accuracy.png)
+
+### Without LSTM vs Withb LSTM - Loss
+
+The following image shows loss of without LSTM and it reaches to healthy state quickly around 10 epochs and it flattened out.
+
+While with LSTM the training loss have decreased nicely, but the val_loss is continuing to climb which it indicates overfitting problem in the network. The accuracy of prediction is increasing, but the confidence in it is decreasing.
+
+I should be careful when adjusting the training parameters, when using different network type.
+
+![image of non lstm vs lstm loss ](images/non-lstm-vs-lstm-loss.png)
+
+### Using a Convolutional Network
+
+```python
+model = tf.keras.Sequential([
+    tf.keras.layers.Embedding(
+        vocab_size,
+        embedding_dim,
+        input_length=max_length
+        ),
+
+
+    # words will be grouped into the size of filter =>5
+    # the number of convolutions 128 to learn
+    # the size of convolutions 5
+    # the activation is relu
+    tf.keras.layers.Conv1D(128, 5, activation='relu'),
+    tf.keras.layers.GlobalMaxPooling1D(),
+
+
+    tf.keras.layers.Dense(24, activation='relu'),
+    tf.keras.layers.Dense(1, activation='relu'),
+])
+
+```
+
+The following image showcases the loss when using convolution layers in text. The accuracy is even doing better than before, but it still suffers from overfitting as it not increasing in the val_acc. 
+
+For the loss, it's increasing in the training set which it indicates overfitting problem.
+It requires different combination of convolution layer to overcome this problem.
+![image of using cnn](images/using-cnn.png)
