@@ -184,6 +184,10 @@ I should be careful when adjusting the training parameters, when using different
 
 ```python
 model = tf.keras.Sequential([
+
+    # vocab_size is the number of unique words => considered as units/neurons count / number of features
+    # embedding_dim is like the filter size in cnn
+    # input_length is the max length of a single sequence of text
     tf.keras.layers.Embedding(
         vocab_size,
         embedding_dim,
@@ -192,8 +196,8 @@ model = tf.keras.Sequential([
 
 
     # words will be grouped into the size of filter =>5
-    # the number of convolutions 128 to learn
-    # the size of convolutions 5
+    # 128 filters to learn
+    # the size of convolutions is 5
     # the activation is relu
     tf.keras.layers.Conv1D(128, 5, activation='relu'),
     tf.keras.layers.GlobalMaxPooling1D(),
@@ -210,3 +214,8 @@ The following image showcases the loss when using convolution layers in text. Th
 For the loss, it's increasing in the training set which it indicates overfitting problem.
 It requires different combination of convolution layer to overcome this problem.
 ![image of using cnn](images/using-cnn.png)
+
+## Tips
+
+- With text there is more overfitting than images, because there always will be out of vocaulary words in validation set
+- These words can't be classified so it lead to overfitting

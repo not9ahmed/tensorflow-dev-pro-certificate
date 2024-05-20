@@ -20,4 +20,5 @@
 - Check Sequence Models course by Andrew https://www.coursera.org/lecture/nlp-sequence-models/deep-rnns-ehs0S
 - Read about LSTM here https://www.coursera.org/lecture/n|p-sequence-models/long-short-term-memory-Istm-KXoay
 - Read about LSTM in tensorflow https://www.tensorflow.org/api_docs/python/tf/keras/layers/LSTM
-- 
+- Read about embedding layer https://www.tensorflow.org/api_docs/python/tf/keras/layers/Embedding
+- Read about Gated Recurrent Unit (GRU) https://www.tensorflow.org/api_docs/python/tf/keras/layers/GRU
