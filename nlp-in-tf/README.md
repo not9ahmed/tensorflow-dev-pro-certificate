@@ -22,3 +22,4 @@
 - Read about LSTM in tensorflow https://www.tensorflow.org/api_docs/python/tf/keras/layers/LSTM
 - Read about embedding layer https://www.tensorflow.org/api_docs/python/tf/keras/layers/Embedding
 - Read about Gated Recurrent Unit (GRU) https://www.tensorflow.org/api_docs/python/tf/keras/layers/GRU
+- Go Through Lab 4, Lab 5 and Lab 6
