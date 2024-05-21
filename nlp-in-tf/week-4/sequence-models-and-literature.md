@@ -72,7 +72,7 @@ input_sequence = np.array(
 
     # line: [1 2 3 4 5 6]
     # padded input sequence:
-    
+
     # (input         )(label)
     # (x             )(y)
     # [0 0 0 0 0 0 0 1 2]
@@ -82,4 +82,156 @@ input_sequence = np.array(
     # [0 0 0 0 1 2 3 4 5 6]
 
 
+# splitting the sentences into Xs and Ys
+
+# all rows and for columns from start till before the end
+xs = input_sequences[:,:-1]  
+
+# all rows and for columns only the last column
+labels = input_sequences[:,:-1]
+
+# convert list to categorical
+# will create one hot encode of the labels
+ys = tf.keras.utils.to_categorical(labels, num_classes=total_words)
 ```
+
+### Building the Model
+
+```python
+# defining the model
+model = tf.keras.Sequential()
+
+# adding the Embedding layer
+# to handle all the words => total_words
+# 64 is number of dimensions to plot the vector for a word
+# size of input dimension which is max_sequence_len
+# it is -1 because we removed one for the label
+model.add(Embedding(
+    total_words,
+    64,
+    input_length=max_sequence_len - 1
+    ))
+
+# adding LSTM layer
+# they carry context along with them
+# 20 cell states
+model.add((LSTM(20)))
+
+# adding dense layer => output layer
+# of size same as the one used in one hot encode
+model.add(Dense(total_words, activation='softmax'))
+
+# compiling the model
+# and definind loss, optimizer, and accuracy
+model.compile(
+    loss='categorical_crossentropy',
+    optimizer='adam',
+    metrics=['accuracy']
+)
+
+# training the model
+model.fit(xs, yx, epochs=200, verbose=1)
+```
+
+
+### Changing the Model to Bidirectional
+
+The model above suffered from problem where the words get repeated
+
+```python
+model = Sequential()
+
+model.add(Embedding(
+    total_words,
+    64,
+    input_length=max_sequence_len - 1
+    ))
+
+
+# adding bidirectional layer
+model.add(Bidirectional(LSTM(20)))
+
+
+# adding the output layer with total_words as the total units
+model.add(Dense(total_words, activation='softmax'))
+
+
+model.compile(
+    loss='categorical_crossentropy',
+    optimizer='adam',
+    metrics=['accuracy']
+    )
+
+
+# training the modle
+model.fit(xs, ys, epochs=500, verbose=1)
+```
+
+
+### Predicting a Word
+
+Word is "Laurence went to Dublin"
+
+```python
+seed_text = "Laurence went to Dublin"
+
+# will tokenize the text to sequences
+# Laurence will be ignored, because it's not of corpus
+# [134,  13, 59]
+token_list = tokenizer.texts_to_sequences([seed_text])[0]
+
+
+# will pad the sequence to match the ones in training set
+# [0 0 0 0 134 13 59]
+token_list = pad_sequences(
+    [token_list],
+    maxlen=max_sequence_len - 1,
+    padding='pre'
+    )
+
+# will pass the padding to the model as prediction
+predicted = model.predict(token_list)
+
+# will give the token of the word most likely to be next in sequence
+predicted = np.arrgmax(probabilities, axis = -1)[0]
+
+
+# do reverse index to convert token back to word
+output_word = tokenizer.index_word[predicted]
+
+# adding the text to seed text
+seed_text += " " + output_word
+
+
+
+# the next code will do it for 10 times
+seed_text = "Laurnce went to dublin"
+next_words = 10
+
+
+for _ in range(next_words):
+    
+    # convert text to sequences
+    token_list = tokenizer.texts_to_sequences([seed_text])[0]
+
+    # padding the sequences
+    token_list = pad_sequences(
+        [token_list],
+        maxlen=max_sequence_len - 1,
+        padding= 'pred'
+        )
+    
+    # making prediction of the next token
+    predicted = model.predicted_classes(token_list, verbose=0)
+
+    # getting the word from index
+    output_word = output_word = tokenizer.index_word[predicted]
+
+
+    # adding the predicted word to seed text
+    seed_text += " " + output_word
+
+print(seed_text)
+```
+
+
