@@ -25,4 +25,4 @@
 - Go Through Lab 4, Lab 5 and Lab 6
 - Fix Conda and TensorFlow on Local Laptop
 - Go through this notebook and it's Character based prediction https://www.tensorflow.org/text/tutorials/text_generation
-- 
+- Go through week 4 assignment
