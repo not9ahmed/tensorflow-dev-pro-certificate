@@ -23,3 +23,6 @@
 - Read about embedding layer https://www.tensorflow.org/api_docs/python/tf/keras/layers/Embedding
 - Read about Gated Recurrent Unit (GRU) https://www.tensorflow.org/api_docs/python/tf/keras/layers/GRU
 - Go Through Lab 4, Lab 5 and Lab 6
+- Fix Conda and TensorFlow on Local Laptop
+- Go through this notebook and it's Character based prediction https://www.tensorflow.org/text/tutorials/text_generation
+- 
