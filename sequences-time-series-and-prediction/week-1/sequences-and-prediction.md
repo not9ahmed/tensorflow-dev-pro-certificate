@@ -68,7 +68,7 @@ Active users at a website for software developers. The dips means it's weekend, 
 There's overall upward trends, but there are local peaks and troughs/dips.
 ![image of combination of trend and seasonalitiy](images/combination.png)
 
-### 4- Not Predicatble at All
+### 4- Not Predicatble/Noise
 
 Complete set of random values producing white noise, and there's nothing to do.
 ![image of not predictable](images/not-predictable.png)
