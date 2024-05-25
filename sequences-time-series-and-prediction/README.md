@@ -4,4 +4,5 @@ The following course will focus on the unique considerations when handling time 
 
 ## Topics to Learn
 
+- Read more about time series types (Trend, Atocorrelation, etc)
 - 

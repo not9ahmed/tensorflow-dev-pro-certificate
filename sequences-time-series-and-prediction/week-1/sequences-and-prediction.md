@@ -112,5 +112,142 @@ Ideally it's better if we can take the entire model, but it's not very simple.
 
 ![image of non-stationary time series](images/non-stationary.png)
 
-## Introduction to Time Series
+## Train, Validation, and Test Sets
+
+The following secion will look at techniques that can be used to forecast that time series.
+
+### Trend + Seasonality + Noise
+
+The following is an example of time series with trend, seasonality and noise.
+![image of trend + seasonality + noise](images/trend-seasonality-noise-ex.png)
+
+#### Naive Forecasting can be used
+
+Take the last value and assume the next will be the same.
+
+Focus on small part of the time series, to get the baseline at the very least, and can be good.
+
+![images of naive forecasting](images/naive-forecasting.png)
+
+### Fixed Partitioning
+
+- To measue the performance of our forecasting model
+
+- The time series can be split into Training Period, Validation Period, and Test Period
+
+- Train the model on the Training Period
+
+- Evaluate the model on the Validation Period
+
+- Retrain using both the training and validation data
+
+- Then test on Test Period to see if model will perform as well
+
+- Retraining again using the Test Data, because the test data is the closest data to current point of time, and it's strongest signal to determine future values
+
+![image of fixed partitioning](images/fixed-partitioning-1.png)
+
+Also, it's common to train using the Training Period, and Validation Period, and test set is in the future
+
+![image of fixed partitioning](images/fixed-partitioning-2.png)
+
+
+### Roll-Forward Partitioning
+
+Start wuth short training period and then gradually increase it by 1 day or week at a time. At each iteration we train the model on training period, and use it to forecast the following day or week in validation period.
+
+Doing fixed partitioning a number of times, and continually refining the model as such.
+
+![image of roll forward partitioning](images/roll-forward-partitioning.png)
+
+## Metrics of Evaluting Performance
+
+### Using NumPy for Evaluating Forecasts
+
+```python
+# Difference between forecasted values of model and actual values over the evalution period
+errors = forecasts - actual
+
+# mean squared error, to remove -ve values
+mse = np.square(errors).mean()
+
+
+# mean of error calculation of same scale as original error
+# root mean squared error
+rmse = np.sqrt(mse)
+
+
+# mean absolute error
+# or mean absolute deviation => mad
+# does not penalize large error
+# 
+mae = np.abs(errors).mean()
+
+
+# mean absolute percentage error
+# mean ratio between absolute errors and absolute values
+# idea of size of error compared to values
+mape = np.abs(errors / x_valid).mean()
+```
+
+### Using Keras for Naive Forecast MAE
+
+If we look at our data we can measure the MAE using the following code
+
+```python
+keras.metrics.mean_absolute_error(x_valid, naive_forecast).numpy()
+
+# 5.937...
+
+```
+
+## Moving Average
+
+The yellow line is a plot of the average of blue values over fixed period called **Averaging Window**.
+
+For example 30 days.
+
+- Eliminates Noise
+- Gives a curve roughly emulating the original series
+- Does not anticipate trends or seasonality
+
+**Depnding on current time like the period after wanting to forecast for future.**  
+It can be worse than naive forecast
+
+![image of moving average](images/moving-average.png)
+
+
+## Differencing
+
+Remove the trend and seasonality from the time series
+
+Study the difference between the value at time T and value at earlier period. Can be year, month, or day.
+![image of differencing](images/differencing-1.png)
+
+For example 1 year => T-365
+
+
+### Moving Average on Difference Time Series
+
+- Use moving average for the earlier period to forecast the difference time series and not original.
+
+Moving Average on Differenced Time Series
+![image of differencing](images/differencing-2.png)
+
+### Restoring the Trend and Seasonality
+
+To get the final forecasts for original time series:  
+- Add back the value at time T - 365
+
+Forecasts = moving average of differenced series + series(T - 365)
+![image of differencing](images/differencing-3.png)
+
+
+### Smoothing Both PAst and Present Values
+
+Forecasts can improved by removing the past noise using moving average on that.
+
+Forecasts = training moving average of differenced series + centered moving average of past series(T - 365)
+
+![image of differencing](images/differencing-4.png)
 
