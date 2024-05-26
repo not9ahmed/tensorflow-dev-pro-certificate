@@ -8,7 +8,7 @@ Stock prices, Weather Forecasts, and SunSpot activity.
 
 ## Time Series Examples
 
-- stock prices
+- Stock prices
 - weather forecasts
 - historical trends
 - Moore's law
@@ -19,10 +19,10 @@ Stock prices, Weather Forecasts, and SunSpot activity.
 An ordered sequence of values that are usually equally spaced over time.
 
 **Univariate Time Series:**
-Single value at each time stamp
+Single value at each time stamp (Temperature)
 
 **Multivariate Time Series:**
-Multiple values at each time stamp.
+Multiple values at each time stamp  (Weather)
 
 - Can be useful for understanding the impact of related data.
 
@@ -68,7 +68,7 @@ Active users at a website for software developers. The dips means it's weekend, 
 There's overall upward trends, but there are local peaks and troughs/dips.
 ![image of combination of trend and seasonalitiy](images/combination.png)
 
-### 4- Not Predicatble/Noise
+### 4- Unpredicatble/Noise
 
 Complete set of random values producing white noise, and there's nothing to do.
 ![image of not predictable](images/not-predictable.png)
@@ -131,7 +131,7 @@ Focus on small part of the time series, to get the baseline at the very least, a
 
 ### Fixed Partitioning
 
-- To measue the performance of our forecasting model
+- To measure the performance of our forecasting model
 
 - The time series can be split into Training Period, Validation Period, and Test Period
 
@@ -205,7 +205,11 @@ keras.metrics.mean_absolute_error(x_valid, naive_forecast).numpy()
 
 The yellow line is a plot of the average of blue values over fixed period called **Averaging Window**.
 
-For example 30 days.
+Averaging Window can be 30 days for example.
+
+Forecast = Window Mean
+
+**This helps in :**
 
 - Eliminates Noise
 - Gives a curve roughly emulating the original series
@@ -213,6 +217,8 @@ For example 30 days.
 
 **Depnding on current time like the period after wanting to forecast for future.**  
 It can be worse than naive forecast
+
+You can forecast a series based on the past values in the series - called lags.
 
 ![image of moving average](images/moving-average.png)
 
@@ -222,6 +228,9 @@ It can be worse than naive forecast
 Remove the trend and seasonality from the time series
 
 Study the difference between the value at time T and value at earlier period. Can be year, month, or day.
+
+series(t) - series(t-365)
+
 ![image of differencing](images/differencing-1.png)
 
 For example 1 year => T-365
@@ -240,14 +249,39 @@ To get the final forecasts for original time series:
 - Add back the value at time T - 365
 
 Forecasts = moving average of differenced series + series(T - 365)
+
 ![image of differencing](images/differencing-3.png)
 
 
-### Smoothing Both PAst and Present Values
+### Smoothing Both Past and Present Values
 
 Forecasts can improved by removing the past noise using moving average on that.
 
-Forecasts = training moving average of differenced series + centered moving average of past series(T - 365)
+Forecasts = trailing moving average of differenced series + centered moving average of past series(T - 365)
 
 ![image of differencing](images/differencing-4.png)
+
+## Trailing Versus Centered Windows
+
+**Trailing windows:**
+Used when computing the moving average of present values.
+
+**Example:**  
+Getting the average of t=0 to t=6 to get the smoothed data point at t=6.
+
+
+**Centered Windows:** 
+Used when computing the moving average of past values.
+
+- More accurate than trailing
+- Cannot be used for smoothing future values, since we don't know future value
+- Can be used on past values
+
+**Example:**  
+getting the average of t=0 to t=6 to get the smoothed data point at t=3.
+
+The following images show the two type of moving averages.
+![image of trailing vs centered moving averages](images/trailing-vs-centered-ma.png)
+
+Statsitcal methods were used for predicting the next values in time series.
 

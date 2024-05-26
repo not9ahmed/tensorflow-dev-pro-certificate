@@ -5,4 +5,6 @@ The following course will focus on the unique considerations when handling time 
 ## Topics to Learn
 
 - Read more about time series types (Trend, Atocorrelation, etc)
+- Study Moving Average Window, Differencing and other time series techniques
+- Study Smoothing types (Trailing and Centered Windows) in time series
 - 
