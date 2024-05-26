@@ -70,6 +70,7 @@ def windowed_dataset(series, window_size, batch_size, shuffle_buffer):
 
 
     # to slice data into windowed dataset
+    # + 1 to indicate that I'm taking the next point as label 
     # each one shifted by one
     # drop_remainder=True to make them all the same size
     dataset = dataset.window(window_size + 1, shift=1, drop_remainder=True)
@@ -144,6 +145,14 @@ model.fit(dataset, epochs=100, verbose=0)
 # inspect the weights
 # l0.get_weights() will get the weights of layer 0
 print("layer weights {}".format(l0.get_weights()))
+
+
+Layer weights [ array([[0.000323], # w_t0
+[0.000323], # w_t1
+[0.000323], # w_t2
+], dtype=float32),
+array([0.01343], dtype=float32)] # b
+
 ```
 
 ## Input Window Features and Labels Naming
@@ -158,4 +167,60 @@ The value at time 0 $t_{0}$ which is 20 steps before the current value is called
 
 For the output, the value at the current time to be the y.
 
+## Prediction
 
+The following code shows how we can make predictions in the model
+
+```python
+# inspect the weights
+# l0.get_weights() will get the weights of layer 0
+print("layer weights {}".format(l0.get_weights()))
+
+Layer weights [ array([[0.000323], # w_t0
+[0.000323], # w_t1
+[0.000323], # w_t2
+], dtype=float32),
+array([0.01343], dtype=float32)] # b
+
+
+# Y = w_t0 x_0 + w_t1 x_1 + ... + b
+
+print(series[1:21])
+
+
+# predict the label for the 20 items
+# np.newaxis reshapes it to the input dimension used by model
+model.predict(series[1:21][np.newaxis])
+
+# [49.032  ... 55.0192]
+
+
+# output prediction
+array([[49.02838]], dtype=float32)
+
+```
+
+### Plot Forecasts for Every Point
+
+
+```python
+forecast = []
+
+# loop over series taking slices and window_size
+for time in range(len(series) - window_size):
+    forecast.append(model.predict(
+        series[time:time + window_size][np.newaxis]
+        ))
+
+
+# take dorecasts after the split_time and load to NumPy array
+forecast = forecast[split_time - window_size:]
+
+results = np.array(forecast)[:, 0, 0]
+
+
+# measure mean absolute error
+tf.keras.metrics.mean_absolute_error(x_valid, results).numpy()
+# 4.95
+
+```
