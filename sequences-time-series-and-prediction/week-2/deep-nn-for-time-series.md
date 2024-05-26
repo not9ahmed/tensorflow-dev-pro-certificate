@@ -224,3 +224,66 @@ tf.keras.metrics.mean_absolute_error(x_valid, results).numpy()
 # 4.95
 
 ```
+
+## Deep neural network training, tuning and prediction
+
+```python
+
+# generating a windowed dataset
+dataset = windowed_dataset(x_train, window_size, batch_size, buffer_size)
+
+# define deep neural network
+model = tf.keras.Sequential([
+    tf.keras.layers.Dense(10, input_shape=[window_size], activation='relu'),
+    tf.keras.layers.Dense(10, activation='relu'),
+    tf.keras.layers.Dense(1)
+])
+
+# compile the model
+model.compile(
+    loss='mse',
+    optimizer=tf.keras.optimzers.SGD(learning_rate=7e-6, momentum=0.9)
+)
+
+# callback to tweak learning rate
+# will be called as callback at endof each epoch
+# change lr to value based on epoch number
+# slowly decreasing the lr
+lr_schedule = tf.keras.callbacks.LearningRateScheduler(
+    lambda epoch: 1e-8 * 10**(epoch / 20)
+)
+
+# training the model
+model.fit(dataset, epochs=100, callbacks=[lr_schedule])
+
+
+# evaluting the model
+tf.keras.metrics.mean_absolute_error(x_valid, results).numpy()
+
+
+# plot the last per epoch vs learning rate
+lrs = 1e-8 * (10 ** np.arrange(100) / 20)
+
+plt.semilogx(lrs, history.history["loss"])
+
+plt.axis([1e-8, 1e-3, 0, 300])
+```
+
+## Plot the Loss
+
+```python
+loss = history.history['loss']
+
+epochs = range(10, len(loss))
+
+plot_loss = loss[10:]
+
+print(plot_loss)
+
+plt.plot(epochs, loss, 'b', label='Training Loss')
+
+plt.show()
+
+
+tf.keras.metrics.mean_absolute_error(x_valid, results).numpy()
+```
