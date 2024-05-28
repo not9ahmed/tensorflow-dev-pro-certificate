@@ -9,4 +9,5 @@ The following course will focus on the unique considerations when handling time 
 - Study Smoothing types (Trailing and Centered Windows) in time series
 - Experiment in the ungraded notebooks of week 2 (differen nn definition, layers, etc)
 - Study the Time Series Week 1 data splits
+- Read about Huber loss function https://en.wikipedia.org/wiki/Huber_loss
 - 
