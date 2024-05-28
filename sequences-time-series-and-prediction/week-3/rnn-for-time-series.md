@@ -76,7 +76,7 @@ Series Dimensionality (Univariate=1)
 
 $$
 \text{Output} =
-\vec{Y}_{0} = 
+\hat{Y}_{0} = 
 \begin{bmatrix}
     1 && 5 && 7\\
     2 && 6 && 8\\
@@ -94,12 +94,19 @@ $$
   - shape = [batch size, # time steps, # dims of number units]
   - shape = [4 X 30 X 3]
 
+**The the outputs for RNN are:**
+
+- $H_{i}$
+- $\hat{Y}_{i}$
+
+![image of recurrent layer in details](images/recurrent-layer-in-details.png)
+
 **In Simple RNN**
 
 State Output $H$ is just a copy of the output matrix $Y$
 
-- $H_{0}$ is just a copy of $\vec{Y}_{0}$
-- $H_{1}$ is just a copy of $\vec{Y}_{1}$, etc
+- $H_{0}$ is just a copy of $\hat{Y}_{0}$
+- $H_{1}$ is just a copy of $\hat{Y}_{1}$, etc
 
 At each timestamp the memory cell gets the current input and the previous output.
 
@@ -112,9 +119,12 @@ Can be done by
 **Sequence to Vector RNN**
 - Which is ignoring all outputs except the last
 
+![image of sequence to vector](images/sequence-to-vector.png)
+
+
 **In Keras it's the default**
 
-- Use `returns_sequence=True` to return a sequence from RNN when creating the layer
+- Use `return_sequences=True` to return a sequence from RNN when creating the layer
 - Needs to be done when stacking one LSTM over the other
 
 ## Outputing a Sequence
@@ -154,7 +164,7 @@ model = keras.models.Sequential([
     # (batch size, # timestamps)
     # to add the # series dims
     # expand the array by 1 dimension to be 3D
-    # (batch size, # timestamps,  # series dims)
+    # (batch size, # timestamps,  features)
     # input_shape=[None] => can sequence of any length
     keras.layers.Lambda(lambda x: tf.expands_dims(x, axis=-1), input_shape=[None]),
 
@@ -212,4 +222,59 @@ model.compile(
 # training the model
 model.fit(train_set, epochs=100, callbacks=[lr_schedule])
 ```
+
+## LSTM
+
+**In RNN, previously:**  
+- They had cells that took batches as inputs or X and they calculated a Y output
+
+- As well as state vector, that feed into the cell along with the next X which then resulted in the Y, and state vector and so on
+
+- State is factor in subsequent calculations, the impact gets lost greatly over timestamps
+
+**In LSTM:**  
+- LSTM adds cell state to this to keep a state along training life
+
+- State will be passed from state to state, timestamp to timestamp, and it can better maintained
+
+- Data from earlier window can have greater impact on overall projection than RNN
+
+- State can be bidirectional, so the state can move forward and backward
+
+## Coding LSTMs
+
+```python
+# clears any internal variables
+tf.keras.backend.clear_session()
+
+dataset = windowed_dataset(x_train, window_size, batch_size, shuffle_buffer_size)
+
+model = tf.models.Sequential([
+    tf.keras.layers.Lambda(lambda x: tf.expand_dims(x, axis=-1), input_shape=[None]),
+
+    # first lstm with 32 cells
+    tf.keras.layers.Birectional(LSTM(32), return_sequences=True),
+
+    # second lstm layer
+    # it gave better results
+    # adding third made it worst
+    tf.keras.layers.Birectional(LSTM(32)),
+
+    # output layer
+    tf.keras.layers.Dense(1)
+
+    # to make the training results better
+    tf.keras.layers.Lambda(lambda x: x * 100.0)
+])
+
+
+model.compile(
+    loss="mse",
+    optimizer=tf.keras.optimizers.SGD(learning_rate=1e-6, momentum=0.9),
+)
+
+# training the model
+model.fit(dataset, epochs=100, verbose=0)
+```
+
 
