@@ -16,4 +16,8 @@ The following course will focus on the unique considerations when handling time 
 - Read about this dataset https://www.kaggle.com/robervalt/sunspots
 - Experiment with Lab 2 to reduce the MAE
 - Experiment with Lab 3 to have a better architecture and hyperparameters
-- 
+- Go through course references https://www.coursera.org/learn/tensorflow-sequences-time-series-and-prediction/supplement/L0eaG/references
+- Go to the Next Courses
+    - TensorFlow: Data and Deployment Specialization
+    - TensorFlow: Advanced Techniques Specialization
+. 
