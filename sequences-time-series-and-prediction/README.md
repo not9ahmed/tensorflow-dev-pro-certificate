@@ -12,4 +12,8 @@ The following course will focus on the unique considerations when handling time 
 - Read about Huber loss function https://en.wikipedia.org/wiki/Huber_loss
 - Study LSTM https://www.coursera.org/lecture/n|p-sequence-models/long-short-term-memory-Istm-KXoay
 - Study Convolutional Neural Network (part of dl specialization) https://www.coursera.org/learn/convolutional-neural-networks
+- Study https://youtube.com/watch?v=|4|SUAcvHF
+- Read about this dataset https://www.kaggle.com/robervalt/sunspots
+- Experiment with Lab 2 to reduce the MAE
+- Experiment with Lab 3 to have a better architecture and hyperparameters
 - 
